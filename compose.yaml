@@ -1,0 +1,22 @@
+services:
+  clash-verge:
+    image: clash-verge-rev:v2.5.1
+    container_name: clash-verge
+    # entrypoint: ["/bin/bash"]
+
+    network_mode: host
+    ipc: host
+
+    stdin_open: true
+    tty: true
+
+    environment:
+      DISPLAY: ${DISPLAY}
+      # DISPLAY: host.docker.internal:0
+
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${HOME}/.local/share/io.github.clash-verge-rev.clash-verge-rev:/root/.local/share/io.github.clash-verge-rev.clash-verge-rev
+      - ${HOME}/.config/io.github.clash-verge-rev.clash-verge-rev:/root/.config/io.github.clash-verge-rev.clash-verge-rev
+
+    restart: "no"
