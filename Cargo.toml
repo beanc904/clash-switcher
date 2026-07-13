@@ -8,4 +8,7 @@ edition = "2024"
 bollard = "0.21.0"
 clap = { version = "4.6.1", features = ["derive"] }
 colored = "3.1.1"
+env_logger = "0.11.11"
+log = "0.4.33"
 sysproxy = "0.3.0"
+tokio = { version = "1.52.3", features = ["full"] }
