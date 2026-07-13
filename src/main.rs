@@ -16,7 +16,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
 
     let args = args::Args::parse();
-    let sysproxy = Sysproxy::get_system_proxy().unwrap();
+    let mut sysproxy = Sysproxy::get_system_proxy().unwrap();
     #[cfg(target_os = "linux")]
     let docker = Docker::connect_with_local_defaults()?;
     #[cfg(target_os = "macos")]
@@ -63,7 +63,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         log::debug!("container does not exist, trying to up the container");
         println!("{}", "Container is not exist. Trying to up one.".red());
         // trying to up a clash-verge container
-
+        Command::new("docker-compose").args(["up", "-d"]).status()?;
         println!("{}", "Finishing up the container.".green());
         return Ok(());
     }
@@ -81,6 +81,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             kill: false,
         } => {
             log::debug!("Run without any args.");
+            sysproxy.enable = !sysproxy.enable;
+            if let Err(e) = sysproxy.set_system_proxy() {
+                println!("{}: {}", "Failed to switch system proxy".red(), e);
+            } else {
+                println!("{}", "Switch system proxy successfully".green());
+            }
             Ok(())
         }
         _ => {
@@ -93,10 +99,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             if args.on {
                 log::debug!("Use on arg.");
+                sysproxy.enable = true;
+                if let Err(e) = sysproxy.set_system_proxy() {
+                    println!("{}: {}", "Failed to turn on system proxy".red(), e);
+                } else {
+                    println!("{}", "Turn on system proxy successfully".green());
+                }
             }
 
             if args.off {
                 log::debug!("Use off arg.");
+                sysproxy.enable = false;
+                if let Err(e) = sysproxy.set_system_proxy() {
+                    println!("{}: {}", "Failed to turn off system proxy".red(), e);
+                } else {
+                    println!("{}", "Turn off system proxy successfully".green());
+                }
             }
 
             if args.status {
