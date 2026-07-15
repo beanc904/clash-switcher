@@ -1,0 +1,9 @@
+Package: clash-switcher
+Version: 0.1.0
+Section: utils
+Priority: optional
+Architecture: amd64
+Maintainer: Coffee Bean
+Depends: docker.io, docker-compose
+Description: Docker launcher written in Rust
+ A launcher application managing docker compose environment.

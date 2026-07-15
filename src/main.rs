@@ -11,6 +11,8 @@ const CONTAINER_NAME: &'static str = "clash-verge";
 const IMAGE_NAME: &'static str = "clash-verge-rev:v2.5.1";
 const PROGRAME_NAME: &'static str = "clash-verge";
 
+const COMPOSE_FILE: &'static str = "/opt/clash-switcher/compose.yaml";
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
@@ -25,6 +27,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         120,
         bollard::API_DEFAULT_VERSION,
     )?;
+
+    // ANCHOR: set sysproxy host:port
+    sysproxy.host = "127.0.0.1".to_string();
+    sysproxy.port = 7897;
+    // ANCHOR_END: set sysproxy host:port
 
     // ANCHOR: check the docker image
     let result = docker.inspect_image(IMAGE_NAME).await;
@@ -63,7 +70,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         log::debug!("container does not exist, trying to up the container");
         println!("{}", "Container is not exist. Trying to up one.".red());
         // trying to up a clash-verge container
-        Command::new("docker-compose").args(["up", "-d"]).status()?;
+        Command::new("docker-compose")
+            .args(["-f", COMPOSE_FILE, "up", "-d"])
+            .status()?;
         println!("{}", "Finishing up the container.".green());
         return Ok(());
     }

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+
+if [ "$1" = "purge" ]; then
+
+    rm -rf \
+        /opt/clash-switcher
+
+fi
+
+
+exit 0

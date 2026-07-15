@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+
+
+IMAGE=/opt/clash-switcher/clash-verge-rev_v2.5.1.tar
+
+
+if [ -f "$IMAGE" ]; then
+    docker load -i "$IMAGE"
+fi
+
+
+chmod +x /usr/bin/clash-switcher
+
+
+exit 0
